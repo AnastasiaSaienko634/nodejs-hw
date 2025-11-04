@@ -2,7 +2,10 @@ import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import pino from 'pino-http';
-
+import { connectMongoDB } from './db/connectMongoDB.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+import studentsRoutes from './routes/notesRoutes.js';
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
@@ -30,21 +33,7 @@ app.use(
   }),
 );
 
-// GET /notes
-app.get('/notes', (req, res) => {
-  res.status(200).json({
-    message: 'Retrieved all notes',
-  });
-});
-
-//GET /notes/:noteId
-
-app.get('/notes/:noteId', (req, res) => {
-  const noteId = req.params.noteId;
-  res.status(200).json({
-    message: `Retrieved note with ID: ${noteId}`,
-  });
-});
+app.use(studentsRoutes);
 
 //GET /test-error
 app.get('/test-error', () => {
@@ -52,21 +41,12 @@ app.get('/test-error', () => {
 });
 
 // не існуючі маршрути
-app.use((req, res) => {
-  res.status(404).json({
-    message: 'Route not found',
-  });
-});
+app.use(notFoundHandler);
 
 //обробка помлок
-app.use((err, req, res, next) => {
-  const isProd = process.env.NODE_ENV === 'production';
-  res.status(500).json({
-    message: isProd
-      ? 'Something went wrong. Please try again later.'
-      : err.message,
-  });
-});
+app.use(errorHandler);
+
+await connectMongoDB();
 
 //запуск серв
 app.listen(PORT, () => {
