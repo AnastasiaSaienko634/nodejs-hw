@@ -1,5 +1,5 @@
-export const notFoundHandler = (res, req) => {
+export const notFoundHandler = (req, res) => {
   res.status(404).json({
-    message: 'Route not found',
+    message: 'Route not found!',
   });
 };
