@@ -1,44 +1,31 @@
-import express from 'express';
 import 'dotenv/config';
+import express from 'express';
 import cors from 'cors';
-import pino from 'pino-http';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
-import studentsRoutes from './routes/notesRoutes.js';
+import notesRoutes from './routes/notesRoutes.js';
+import logger from './middleware/logger.js';
+
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
+//логування запитів
+app.use(logger);
+
 //щоб парсити данні
-app.use(express.json());
+app.use(
+  express.json({
+    type: ['application/json', 'application/vnd.api+json'],
+    limit: '100kb',
+  }),
+);
 
 //дозволяє обмін данними з різних джерел
 app.use(cors());
 
-//логування запитів
-app.use(
-  pino({
-    level: 'info',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'HH:MM:ss',
-        ignore: 'pid,hostname',
-        messageFormat:
-          '{req.method} {req.url} {res.statusCode} - {responseTime}ms',
-        hideObject: true,
-      },
-    },
-  }),
-);
-
-app.use(studentsRoutes);
-
-//GET /test-error
-app.get('/test-error', () => {
-  throw new Error('Simulated server error');
-});
+//GET запити та маршурути за notes
+app.use(notesRoutes);
 
 // не існуючі маршрути
 app.use(notFoundHandler);
@@ -46,6 +33,7 @@ app.use(notFoundHandler);
 //обробка помлок
 app.use(errorHandler);
 
+//Зєднання з базою данних.
 await connectMongoDB();
 
 //запуск серв
