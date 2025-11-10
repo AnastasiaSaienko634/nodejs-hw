@@ -10,10 +10,31 @@ const objectIdValidator = (value, helpers) => {
 //GET /notes
 export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1).default(1),
-    perPage: Joi.number().integer().min(5).max(20).default(10),
+    page: Joi.number()
+      .integer()
+      .min(1)
+      .messages({
+        'number.base': 'page must be a number',
+        'number.min': 'page must be at least 1',
+      })
+      .default(1),
+    perPage: Joi.number()
+      .integer()
+      .min(5)
+      .max(20)
+      .messages({
+        'number.base': 'perPage must be a number',
+        'number.min': 'perPage must be at least 5',
+        'number.max': 'perPage must be at most 20',
+      })
+      .default(10),
     tag: Joi.string()
       .valid(...tags)
+      .messages({
+        'string.base': 'Tag must be a string',
+        'any.only':
+          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo ',
+      })
       .optional(),
     search: Joi.string().allow('').optional(),
   }),
@@ -29,9 +50,20 @@ export const noteIdSchema = {
 //POST /notes
 export const createNoteSchema = {
   [Segments.BODY]: Joi.object({
-    title: Joi.string().min(1).required(),
+    title: Joi.string().min(1).required().messages({
+      'string.base': 'title must be a string',
+      'number.min': 'title must be at least 1',
+      'any.required': 'title is required',
+    }),
     content: Joi.string().allow('').optional(),
-    tag: Joi.string().valid('male', 'female', 'other').optional(),
+    tag: Joi.string()
+      .valid(...tags)
+      .messages({
+        'string.base': 'Tag must be a string',
+        'any.only':
+          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo ',
+      })
+      .optional(),
   }),
 };
 
@@ -45,6 +77,11 @@ export const updateNoteSchema = {
     content: Joi.string().allow('').optional(),
     tag: Joi.string()
       .valid(...tags)
+      .messages({
+        'string.base': 'Tag must be a string',
+        'any.only':
+          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo ',
+      })
       .optional(),
   }).min(1),
 };
