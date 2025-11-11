@@ -52,7 +52,7 @@ export const createNoteSchema = {
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(1).required().messages({
       'string.base': 'title must be a string',
-      'number.min': 'title must be at least 1',
+      'string.min': 'title must be at least 1',
       'any.required': 'title is required',
     }),
     content: Joi.string().allow('').optional(),
