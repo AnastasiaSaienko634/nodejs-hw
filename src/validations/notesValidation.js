@@ -1,6 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
-import tags from '../constants/tags.js';
+import TAGS from '../constants/tags.js';
 
 //Валідатор для ObjectId
 const objectIdValidator = (value, helpers) => {
@@ -29,7 +29,7 @@ export const getAllNotesSchema = {
       })
       .default(10),
     tag: Joi.string()
-      .valid(...tags)
+      .valid(...TAGS)
       .messages({
         'string.base': 'Tag must be a string',
         'any.only':
@@ -57,7 +57,7 @@ export const createNoteSchema = {
     }),
     content: Joi.string().allow('').optional(),
     tag: Joi.string()
-      .valid(...tags)
+      .valid(...TAGS)
       .messages({
         'string.base': 'Tag must be a string',
         'any.only':
@@ -76,7 +76,7 @@ export const updateNoteSchema = {
     title: Joi.string().min(1).optional(),
     content: Joi.string().allow('').optional(),
     tag: Joi.string()
-      .valid(...tags)
+      .valid(...TAGS)
       .messages({
         'string.base': 'Tag must be a string',
         'any.only':
