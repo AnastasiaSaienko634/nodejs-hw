@@ -15,5 +15,7 @@ const noteSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+noteSchema.index({ title: 'text', content: 'text' });
+
 //щоб спілкуватися з базою данних
 export const Note = mongoose.model('Note', noteSchema, 'notes');

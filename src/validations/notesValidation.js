@@ -32,11 +32,9 @@ export const getAllNotesSchema = {
       .valid(...TAGS)
       .messages({
         'string.base': 'Tag must be a string',
-        'any.only':
-          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo ',
-      })
-      .optional(),
-    search: Joi.string().allow('').optional(),
+        'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
+      }),
+    search: Joi.string().trim().allow(''),
   }),
 };
 
