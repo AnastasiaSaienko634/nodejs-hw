@@ -33,8 +33,9 @@ export const getAllNotesSchema = {
       .messages({
         'string.base': 'Tag must be a string',
         'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
-      }),
-    search: Joi.string().trim().allow(''),
+      })
+      .optional(),
+    search: Joi.string().trim().allow('').optional(),
   }),
 };
 
@@ -58,8 +59,7 @@ export const createNoteSchema = {
       .valid(...TAGS)
       .messages({
         'string.base': 'Tag must be a string',
-        'any.only':
-          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo ',
+        'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
       })
       .optional(),
   }),
@@ -68,7 +68,7 @@ export const createNoteSchema = {
 //PATCH /notes/:noteId
 export const updateNoteSchema = {
   [Segments.PARAMS]: Joi.object({
-    noteId: Joi.string().custom(objectIdValidator).required,
+    noteId: Joi.string().custom(objectIdValidator).required(),
   }),
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(1).optional(),
@@ -77,8 +77,7 @@ export const updateNoteSchema = {
       .valid(...TAGS)
       .messages({
         'string.base': 'Tag must be a string',
-        'any.only':
-          'Tag must be one of: Work, Personal, Meeting, Shopping, Ideas, Travel, Finance, Health, Important, Todo ',
+        'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
       })
       .optional(),
   }).min(1),
