@@ -1,11 +1,13 @@
 import { Note } from '../models/note.js';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
-import TAGS from '../constants/tags.js';
+import { TAGS } from '../constants/tags.js';
 
 //GET All notes
 export const getAllNotes = async (req, res) => {
+  //данні які ми роби по замовченню page = 1, perPage = 10
   const { page = 1, perPage = 10, tag, search } = req.query;
+  //скільки треба пропустити skip
   const skip = (page - 1) * perPage;
   let notesQuery = Note.find();
 
