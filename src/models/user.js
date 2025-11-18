@@ -3,16 +3,23 @@ import mongoose from 'mongoose';
 export const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: false, trim: true },
-    email: { type: String, required: true, trim: true },
+    email: { type: String, unique: true, required: true, trim: true },
     password: { type: String, required: true, minlength: 8 },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
-// 1.Додайте до схеми userSchema метод toJSON, щоб видаляти пароль
-//  із об'єкта користувача перед відправкою у відповідь.
+userSchema.pre('save', function (next) {
+  if (!this.username) {
+    this.username = this.email;
+  }
+  next();
+});
 
-// 2.Створіть хук pre('save'), щоб за замовчуванням встановлювати
-// username таким самим, як email, при створенні користувача.
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
 
 export const User = mongoose.model('User', userSchema);
