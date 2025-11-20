@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
 const noteSchema = new mongoose.Schema(
@@ -11,6 +12,7 @@ const noteSchema = new mongoose.Schema(
       default: 'Todo',
       enum: TAGS,
     },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true },
 );

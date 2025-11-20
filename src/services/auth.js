@@ -26,7 +26,7 @@ export const setSessionCookies = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true, //browser doesn't have aaccess to cookie with JS
     secure: true, //browser send cookie only with Https
-    sameSite: 'none',
+    sameSite: 'none', //вкаузє що кукі може передаватися між різними доменами
     maxAge: ONE_DAY,
   });
 
