@@ -7,6 +7,8 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
 import logger from './middleware/logger.js';
+import authRotes from '../src/routes/authRoutes.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -24,6 +26,11 @@ app.use(
 
 //дозволяє обмін данними з різних джерел
 app.use(cors());
+//parser cookie
+app.use(cookieParser());
+
+//Регестрація та Логін
+app.use(authRotes);
 
 //GET запити та маршурути за notes
 app.use(notesRoutes);
