@@ -44,13 +44,13 @@ export const getNoteById = async (req, res) => {
   const noteId = req.params.noteId;
 
   if (!mongoose.isValidObjectId(noteId)) {
-    throw createHttpError(404, 'Note is not found!');
+    throw createHttpError(404, 'Invalid note id');
   }
 
-  const note = await Note.findOne({ id: noteId, userId: req.user._id });
+  const note = await Note.findOne({ _id: noteId, userId: req.user._id });
 
   if (!note) {
-    throw createHttpError(404, 'Note is not found!');
+    throw createHttpError(404, 'Note not found');
   }
   res.status(200).json(note);
 };
@@ -65,12 +65,12 @@ export const createNote = async (req, res) => {
 export const deleteNote = async (req, res) => {
   const noteId = req.params.noteId;
   const note = await Note.findOneAndDelete({
-    id: noteId,
+    _id: noteId,
     userId: req.user._id,
   });
 
   if (!note) {
-    throw createHttpError(404, 'Note is not found!');
+    throw createHttpError(404, 'Note not found');
   }
   res.status(200).json(note);
 };

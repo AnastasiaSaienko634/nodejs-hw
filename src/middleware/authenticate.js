@@ -25,7 +25,7 @@ export const authenticate = async (req, res, next) => {
   //Перевіряємо чи є такий юзер в базі данних
   const user = await User.findById(session.userId);
   if (!user) {
-    return createHttpError(401);
+    return next(createHttpError(401));
   }
 
   //додаємо нашого юзера до запиту

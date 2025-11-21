@@ -7,11 +7,11 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
 import logger from './middleware/logger.js';
-import authRotes from '../src/routes/authRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? 3030;
 
 //логування запитів
 app.use(logger);
@@ -30,7 +30,7 @@ app.use(cors());
 app.use(cookieParser());
 
 //Регестрація та Логін
-app.use(authRotes);
+app.use(authRoutes);
 
 //GET запити та маршурути за notes
 app.use(notesRoutes);

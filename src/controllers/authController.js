@@ -64,7 +64,7 @@ export const loginUser = async (req, res, next) => {
 };
 
 //POST auth/logout
-export const logOutUser = async (req, res) => {
+export const logoutUser = async (req, res) => {
   const { sessionId } = req.cookies;
 
   //Видаляємо сесію

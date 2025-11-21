@@ -6,7 +6,7 @@ import {
 } from '../validations/authValidation.js';
 import {
   loginUser,
-  logOutUser,
+  logoutUser,
   refreshUserSession,
   registerUser,
 } from '../controllers/authController.js';
@@ -20,7 +20,7 @@ router.post('/auth/register', celebrate(registerUserSchema), registerUser);
 router.post('/auth/login', celebrate(loginUserSchema), loginUser);
 
 //POST auth/logout
-router.post('/auth/logout', logOutUser);
+router.post('/auth/logout', logoutUser);
 
 //POST auth/refresh
 router.post('/auth/refresh', refreshUserSession);
