@@ -4,6 +4,11 @@ import { User } from '../models/user.js';
 import { createSession } from '../services/auth.js';
 import { Session } from '../models/session.js';
 import { setSessionCookies } from '../services/auth.js';
+import jwt from 'jsonwebtoken';
+import { sendEmail } from '../utils/sendMail.js';
+import handlebars from 'handlebars';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 
 //POST /auth/register
 export const registerUser = async (req, res, next) => {
@@ -112,4 +117,55 @@ export const refreshUserSession = async (req, res, next) => {
   setSessionCookies(res, newSession);
 
   res.status(200).json({ message: 'Session refreshed' });
+};
+
+//POST /auth/request-reset-email
+export const requestResetEmail = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res
+      .status(200)
+      .json({ message: 'If this email exisist, a reset link has been sent' });
+  }
+
+  //Якщо користувач генеруємо кортко живучий токен та відправляємо лист
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' },
+  );
+
+  //Формуємо шлях до шаблону
+  const templatePath = path.resolve('src/templates/reset-password-email.html');
+  //Читаємо шаблон
+  const templateSource = await fs.readFile(templatePath, 'utf-8');
+  //Готуємо шаблон до заповнення
+  const template = handlebars.compile(templateSource);
+  //Формуємо із шаблона HTML докумен з динамычними данними
+  const html = template({
+    name: user.username,
+    link: `${process.env.FRONTEND_DOMAIN}/reset-password?token=${resetToken}`,
+  });
+  try {
+    await sendEmail({
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch {
+    return next(
+      createHttpError(500, 'Failed to send the email, please try again'),
+    );
+  }
+
+  res
+    .status(200)
+    .json({ message: 'If this email exists, a rest link has been sent' });
 };
