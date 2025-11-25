@@ -4,7 +4,7 @@ import {
   loginUserSchema,
   registerUserSchema,
   requestResetEmailSchema,
-  resetPwdSchema,
+  resetPasswordSchema,
 } from '../validations/authValidation.js';
 import {
   loginUser,
@@ -37,6 +37,10 @@ router.post(
 );
 
 //POST auth/reset-password
-router.post('/auth/reset-password', celebrate(resetPwdSchema), resetPassword);
+router.post(
+  '/auth/reset-password',
+  celebrate(resetPasswordSchema),
+  resetPassword,
+);
 
 export default router;

@@ -10,6 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+//Відправляємо данні до Brevo
 export const sendEmail = async (options) => {
   return await transporter.sendMail(options);
 };
