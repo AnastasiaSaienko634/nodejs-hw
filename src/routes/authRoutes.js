@@ -4,6 +4,7 @@ import {
   loginUserSchema,
   registerUserSchema,
   requestResetEmailSchema,
+  resetPwdSchema,
 } from '../validations/authValidation.js';
 import {
   loginUser,
@@ -11,6 +12,7 @@ import {
   refreshUserSession,
   registerUser,
   requestResetEmail,
+  resetPassword,
 } from '../controllers/authController.js';
 
 const router = Router();
@@ -33,5 +35,8 @@ router.post(
   celebrate(requestResetEmailSchema),
   requestResetEmail,
 );
+
+//POST auth/reset-password
+router.post('/auth/reset-password', celebrate(resetPwdSchema), resetPassword);
 
 export default router;
