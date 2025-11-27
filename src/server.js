@@ -9,6 +9,7 @@ import notesRoutes from './routes/notesRoutes.js';
 import logger from './middleware/logger.js';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
+import usersRoutes from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
@@ -34,6 +35,9 @@ app.use(authRoutes);
 
 //GET запити та маршурути за notes
 app.use(notesRoutes);
+
+//Patch avatar
+app.use(usersRoutes);
 
 // не існуючі маршрути
 app.use(notFoundHandler);
